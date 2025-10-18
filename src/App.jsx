@@ -30,7 +30,7 @@ function App() {
     setAnalyzingContradictions(true);
     try {
       console.log('🚀 Sending request to /analyze/contradictions');
-      const response = await fetch('web-production-a07f0.up.railway.app/analyze/contradictions', {
+      const response = await fetch('https://apeiropdfanalyzerbe.onrender.com/analyze/contradictions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ tables: extractedData.tables })
@@ -58,7 +58,7 @@ function App() {
   const handleFindGaps = async () => {
     setAnalyzingGaps(true);
     try {
-      const response = await fetch('web-production-a07f0.up.railway.app/analyze/gaps', {
+      const response = await fetch('https://apeiropdfanalyzerbe.onrender.com/analyze/gaps', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ tables: extractedData.tables })
@@ -129,7 +129,7 @@ function App() {
       const formData = new FormData();
       formData.append('file', selectedFile);
 
-      const response = await fetch('web-production-a07f0.up.railway.app/upload', {
+      const response = await fetch('https://apeiropdfanalyzerbe.onrender.com/upload', {
         method: 'POST',
         body: formData,
       });
@@ -157,7 +157,7 @@ function App() {
     setExtractError('');
 
     try {
-      const response = await fetch(`web-production-a07f0.up.railway.app/extract?file_id=${fileIdToExtract}`, {
+      const response = await fetch(`https://apeiropdfanalyzerbe.onrender.com/extract?file_id=${fileIdToExtract}`, {
         method: 'POST',
       });
 

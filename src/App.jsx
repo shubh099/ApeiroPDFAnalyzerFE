@@ -129,7 +129,7 @@ function App() {
       const formData = new FormData();
       formData.append('file', selectedFile);
 
-      const response = await fetch('http://localhost:8000/upload', {
+      const response = await fetch('https://apeiropdfanalyzerbe.onrender.com/upload', {
         method: 'POST',
         body: formData,
       });
@@ -157,7 +157,7 @@ function App() {
     setExtractError('');
 
     try {
-      const response = await fetch(`http://localhost:8000/extract?file_id=${fileIdToExtract}`, {
+      const response = await fetch(`https://apeiropdfanalyzerbe.onrender.com/extract?file_id=${fileIdToExtract}`, {
         method: 'POST',
       });
 

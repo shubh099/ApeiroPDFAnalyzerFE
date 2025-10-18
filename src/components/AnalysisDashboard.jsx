@@ -95,7 +95,7 @@ export default function AnalysisDashboard({ contradictions, gaps, extractedData,
     const documentContext = extractedData?.document_context || "Unknown healthcare document";
 
     try {
-      const response = await fetch('http://localhost:8000/clarify', {
+      const response = await fetch('web-production-a07f0.up.railway.app/clarify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

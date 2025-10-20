@@ -33,7 +33,10 @@ function App() {
       const response = await fetch('https://apeiropdfanalyzerbe.onrender.com/analyze/contradictions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tables: extractedData.tables })
+        body: JSON.stringify({
+          tables: extractedData.tables,
+          document_context: extractedData.document_context || ''
+        })
       });
       console.log('📡 Response received:', response.status);
       const data = await response.json();
@@ -61,7 +64,10 @@ function App() {
       const response = await fetch('https://apeiropdfanalyzerbe.onrender.com/analyze/gaps', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tables: extractedData.tables })
+        body: JSON.stringify({
+          tables: extractedData.tables,
+          document_context: extractedData.document_context || ''
+        })
       });
       const data = await response.json();
       if (data.success) {

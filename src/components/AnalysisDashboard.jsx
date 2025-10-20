@@ -1,6 +1,83 @@
 import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 
+// Simple markdown to JSX converter for clarifications
+function MarkdownText({ text }) {
+  if (!text) return null;
+
+  const lines = text.split('\n');
+  const elements = [];
+  let currentParagraph = [];
+
+  const flushParagraph = () => {
+    if (currentParagraph.length > 0) {
+      elements.push(
+        <p key={elements.length} className="text-gray-700 mb-3 leading-relaxed">
+          {currentParagraph.join(' ')}
+        </p>
+      );
+      currentParagraph = [];
+    }
+  };
+
+  lines.forEach((line, index) => {
+    const trimmedLine = line.trim();
+
+    // Heading level 2 (##)
+    if (trimmedLine.startsWith('## ')) {
+      flushParagraph();
+      elements.push(
+        <h2 key={elements.length} className="text-xl font-bold text-gray-900 mt-4 mb-2">
+          {trimmedLine.substring(3)}
+        </h2>
+      );
+    }
+    // Heading level 3 (###)
+    else if (trimmedLine.startsWith('### ')) {
+      flushParagraph();
+      elements.push(
+        <h3 key={elements.length} className="text-lg font-semibold text-gray-800 mt-3 mb-2">
+          {trimmedLine.substring(4)}
+        </h3>
+      );
+    }
+    // Bold text (**text**)
+    else if (trimmedLine.includes('**')) {
+      flushParagraph();
+      const parts = trimmedLine.split('**');
+      const formatted = parts.map((part, i) =>
+        i % 2 === 1 ? <strong key={i}>{part}</strong> : part
+      );
+      elements.push(
+        <p key={elements.length} className="text-gray-700 mb-3 leading-relaxed">
+          {formatted}
+        </p>
+      );
+    }
+    // List items (- or *)
+    else if (trimmedLine.startsWith('- ') || trimmedLine.startsWith('* ')) {
+      flushParagraph();
+      elements.push(
+        <li key={elements.length} className="text-gray-700 ml-6 mb-1">
+          {trimmedLine.substring(2)}
+        </li>
+      );
+    }
+    // Empty line
+    else if (trimmedLine === '') {
+      flushParagraph();
+    }
+    // Regular paragraph text
+    else {
+      currentParagraph.push(trimmedLine);
+    }
+  });
+
+  flushParagraph(); // Flush any remaining paragraph
+
+  return <div className="markdown-content">{elements}</div>;
+}
+
 function FindingCard({ finding, onGetClarification, clarification, loadingClarification }) {
   const severityColors = {
     high: 'bg-red-100 border-red-500 text-red-800',
@@ -69,9 +146,9 @@ function FindingCard({ finding, onGetClarification, clarification, loadingClarif
         <div className="mt-4 bg-green-50 border-l-4 border-green-500 p-4 rounded">
           <div className="flex items-start">
             <span className="text-green-600 mr-2">💡</span>
-            <div>
-              <p className="font-semibold text-green-800 mb-2">Possible Clarification:</p>
-              <p className="text-gray-700 whitespace-pre-wrap">{clarification}</p>
+            <div className="flex-1">
+              <p className="font-semibold text-green-800 mb-3">Possible Clarification:</p>
+              <MarkdownText text={clarification} />
             </div>
           </div>
         </div>

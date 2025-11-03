@@ -393,9 +393,9 @@ function App() {
           </div>
         </div>
 
-        {/* Display Extracted Tables */}
+        {/* Display Extraction Summary */}
         {extractedData && !extracting && (
-          <TableDisplay extractedData={extractedData} />
+          <TableDisplay extractedData={extractedData} showTables={false} />
         )}
 
         {/* Analysis Buttons */}
@@ -461,7 +461,12 @@ function App() {
                                 )}
                               </button>
                             </div>                )}
-          
+
+        {/* Display Tables */}
+        {extractedData && !extracting && (
+          <TableDisplay extractedData={extractedData} showSummary={false} />
+        )}
+
                 <AnalysisDashboard
                   contradictions={contradictions}
                   gaps={gaps}

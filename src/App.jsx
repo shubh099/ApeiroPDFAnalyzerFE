@@ -30,13 +30,10 @@ function App() {
     setAnalyzingContradictions(true);
     try {
       console.log('🚀 Sending request to /analyze/contradictions');
-      const response = await fetch('https://apeiropdfanalyzerbe.onrender.com/analyze/contradictions', {
+      const response = await fetch('http://localhost:8000/analyze/contradictions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          tables: extractedData.tables,
-          document_context: extractedData.document_context || ''
-        })
+        body: JSON.stringify({ tables: extractedData.tables })
       });
       console.log('📡 Response received:', response.status);
       const data = await response.json();
@@ -61,13 +58,10 @@ function App() {
   const handleFindGaps = async () => {
     setAnalyzingGaps(true);
     try {
-      const response = await fetch('https://apeiropdfanalyzerbe.onrender.com/analyze/gaps', {
+      const response = await fetch('http://localhost:8000/analyze/gaps', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          tables: extractedData.tables,
-          document_context: extractedData.document_context || ''
-        })
+        body: JSON.stringify({ tables: extractedData.tables })
       });
       const data = await response.json();
       if (data.success) {
@@ -135,7 +129,7 @@ function App() {
       const formData = new FormData();
       formData.append('file', selectedFile);
 
-      const response = await fetch('https://apeiropdfanalyzerbe.onrender.com/upload', {
+      const response = await fetch('http://localhost:8000/upload', {
         method: 'POST',
         body: formData,
       });
@@ -163,7 +157,7 @@ function App() {
     setExtractError('');
 
     try {
-      const response = await fetch(`https://apeiropdfanalyzerbe.onrender.com/extract?file_id=${fileIdToExtract}`, {
+      const response = await fetch(`http://localhost:8000/extract?file_id=${fileIdToExtract}`, {
         method: 'POST',
       });
 
@@ -190,7 +184,7 @@ function App() {
             <FileCheck2 className="w-14 h-14 text-white" />
           </div>
           <h1 className="text-6xl font-black bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-6 tracking-tight">
-            Health Policy AI
+            PDF Intelligence Analysis
           </h1>
           <p className="text-2xl text-gray-700 max-w-3xl mx-auto leading-relaxed font-medium">
             AI-powered document analysis to extract tables and detect contradictions & gaps
@@ -398,76 +392,79 @@ function App() {
           <TableDisplay extractedData={extractedData} />
         )}
 
-        {/* Analysis Buttons */}
+        {/* Analysis Buttons and Dashboard */}
         {extractedData && !extracting && (
-                            <div className="mt-8 flex gap-4 justify-center">
-                              <button
-                                onClick={() => {
-                                  if (contradictionsAnalyzed) {
-                                    // Toggle filter
-                                    setActiveFilter(activeFilter === 'contradictions' ? null : 'contradictions');
-                                  } else {
-                                    // Run analysis
-                                    handleDetectContradictions();
-                                  }
-                                }}
-                                disabled={analyzingContradictions}
-                                className={`px-6 py-3 rounded-lg flex items-center gap-2 transition-all ${
-                                  contradictionsAnalyzed
-                                    ? activeFilter === 'contradictions'
-                                      ? 'bg-red-600 text-white ring-4 ring-red-300'
-                                      : 'bg-red-500 text-white hover:bg-red-600'
-                                    : analyzingContradictions
-                                      ? 'bg-gray-400 text-white cursor-not-allowed'
-                                      : 'bg-red-500 text-white hover:bg-red-600'
-                                }`}
-                              >
-                                {analyzingContradictions ? (
-                                  <><Loader2 className="w-5 h-5 animate-spin" /> Analyzing...</>
-                                ) : contradictionsAnalyzed ? (
-                                  <>✓ Contradictions Analyzed {contradictions.length > 0 && `(${contradictions.length})`}</>
-                                ) : (
-                                  <>Detect Contradictions</>
-                                )}
-                              </button>
+          <>
+            <div className="mt-8 flex gap-4 justify-center">
+              <button
+                onClick={() => {
+                  if (contradictionsAnalyzed) {
+                    // Toggle filter
+                    setActiveFilter(activeFilter === 'contradictions' ? null : 'contradictions');
+                  } else {
+                    // Run analysis
+                    handleDetectContradictions();
+                  }
+                }}
+                disabled={analyzingContradictions}
+                className={`px-6 py-3 rounded-lg flex items-center gap-2 transition-all ${
+                  contradictionsAnalyzed
+                    ? activeFilter === 'contradictions'
+                      ? 'bg-red-600 text-white ring-4 ring-red-300'
+                      : 'bg-red-500 text-white hover:bg-red-600'
+                    : analyzingContradictions
+                      ? 'bg-gray-400 text-white cursor-not-allowed'
+                      : 'bg-red-500 text-white hover:bg-red-600'
+                }`}
+              >
+                {analyzingContradictions ? (
+                  <><Loader2 className="w-5 h-5 animate-spin" /> Analyzing...</>
+                ) : contradictionsAnalyzed ? (
+                  <>✓ Contradictions Analyzed {contradictions.length > 0 && `(${contradictions.length})`}</>
+                ) : (
+                  <>Detect Contradictions</>
+                )}
+              </button>
 
-                              <button
-                                onClick={() => {
-                                  if (gapsAnalyzed) {
-                                    // Toggle filter
-                                    setActiveFilter(activeFilter === 'gaps' ? null : 'gaps');
-                                  } else {
-                                    // Run analysis
-                                    handleFindGaps();
-                                  }
-                                }}
-                                disabled={analyzingGaps}
-                                className={`px-6 py-3 rounded-lg flex items-center gap-2 transition-all ${
-                                  gapsAnalyzed
-                                    ? activeFilter === 'gaps'
-                                      ? 'bg-yellow-600 text-white ring-4 ring-yellow-300'
-                                      : 'bg-yellow-500 text-white hover:bg-yellow-600'
-                                    : analyzingGaps
-                                      ? 'bg-gray-400 text-white cursor-not-allowed'
-                                      : 'bg-yellow-500 text-white hover:bg-yellow-600'
-                                }`}
-                              >
-                                {analyzingGaps ? (
-                                  <><Loader2 className="w-5 h-5 animate-spin" /> Analyzing...</>
-                                ) : gapsAnalyzed ? (
-                                  <>✓ Gaps Analyzed {gaps.length > 0 && `(${gaps.length})`}</>
-                                ) : (
-                                  <>Find Gaps</>
-                                )}
-                              </button>
-                            </div>                )}
-          
-                <AnalysisDashboard
-                  contradictions={contradictions}
-                  gaps={gaps}
-                  extractedData={extractedData}
-                  activeFilter={activeFilter}
-                />
+              <button
+                onClick={() => {
+                  if (gapsAnalyzed) {
+                    // Toggle filter
+                    setActiveFilter(activeFilter === 'gaps' ? null : 'gaps');
+                  } else {
+                    // Run analysis
+                    handleFindGaps();
+                  }
+                }}
+                disabled={analyzingGaps}
+                className={`px-6 py-3 rounded-lg flex items-center gap-2 transition-all ${
+                  gapsAnalyzed
+                    ? activeFilter === 'gaps'
+                      ? 'bg-yellow-600 text-white ring-4 ring-yellow-300'
+                      : 'bg-yellow-500 text-white hover:bg-yellow-600'
+                    : analyzingGaps
+                      ? 'bg-gray-400 text-white cursor-not-allowed'
+                      : 'bg-yellow-500 text-white hover:bg-yellow-600'
+                }`}
+              >
+                {analyzingGaps ? (
+                  <><Loader2 className="w-5 h-5 animate-spin" /> Analyzing...</>
+                ) : gapsAnalyzed ? (
+                  <>✓ Gaps Analyzed {gaps.length > 0 && `(${gaps.length})`}</>
+                ) : (
+                  <>Find Gaps</>
+                )}
+              </button>
+            </div>
+
+            <AnalysisDashboard
+              contradictions={contradictions}
+              gaps={gaps}
+              extractedData={extractedData}
+              activeFilter={activeFilter}
+            />
+          </>
+        )}
           
         
       </div>

@@ -20,7 +20,7 @@ function MarkdownText({ text }) {
     }
   };
 
-  lines.forEach((line, index) => {
+  lines.forEach((line) => {
     const trimmedLine = line.trim();
 
     // Heading level 2 (##)

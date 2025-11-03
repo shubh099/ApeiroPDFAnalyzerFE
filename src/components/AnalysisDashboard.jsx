@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Loader2 } from 'lucide-react';
+import { Loader2, AlertTriangle, Search } from 'lucide-react';
 
 // Simple markdown to JSX converter for clarifications
 function MarkdownText({ text }) {
@@ -196,12 +196,21 @@ export default function AnalysisDashboard({ contradictions, gaps, extractedData,
   };
 
   return (
-    <div className="mt-12">
+    <div className="mt-12 space-y-8">
       {shouldShowContradictions && contradictions && contradictions.length > 0 && (
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">
-            Contradictions Found ({contradictions.length})
-          </h2>
+        <div>
+          {/* Contradictions Section Heading */}
+          <div className="bg-gradient-to-br from-red-50 via-rose-50 to-pink-50 rounded-3xl shadow-xl border-2 border-red-200 p-6 mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-rose-600 rounded-2xl flex items-center justify-center">
+                <AlertTriangle className="w-6 h-6 text-white" />
+              </div>
+              <h2 className="text-3xl font-black text-gray-900">
+                Contradictions <span className="text-red-600">({contradictions.length})</span>
+              </h2>
+            </div>
+          </div>
+
           {contradictions.map((finding, index) => (
             <FindingCard
               key={index}
@@ -216,9 +225,18 @@ export default function AnalysisDashboard({ contradictions, gaps, extractedData,
 
       {shouldShowGaps && gaps && gaps.length > 0 && (
         <div>
-          <h2 className="text-2xl font-bold text-yellow-600 mb-4">
-            Gaps Found ({gaps.length})
-          </h2>
+          {/* Gaps Section Heading */}
+          <div className="bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50 rounded-3xl shadow-xl border-2 border-yellow-200 p-6 mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-yellow-600 to-amber-600 rounded-2xl flex items-center justify-center">
+                <Search className="w-6 h-6 text-white" />
+              </div>
+              <h2 className="text-3xl font-black text-gray-900">
+                Gaps <span className="text-yellow-600">({gaps.length})</span>
+              </h2>
+            </div>
+          </div>
+
           {gaps.map((finding, index) => (
             <FindingCard
               key={`gap-${index}`}

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Upload, FileText, Loader2, CheckCircle, XCircle, FileCheck2, Sparkles } from 'lucide-react';
+import { Upload, FileText, Loader2, CheckCircle, XCircle, FileCheck2, Sparkles, Table } from 'lucide-react';
 import TableDisplay from './components/TableDisplay';
 
 import AnalysisDashboard from './components/AnalysisDashboard';
@@ -20,7 +20,7 @@ function App() {
   const [gapsAnalyzed, setGapsAnalyzed] = useState(false);
   const [analyzingContradictions, setAnalyzingContradictions] = useState(false);
   const [analyzingGaps, setAnalyzingGaps] = useState(false);
-  const [activeFilter, setActiveFilter] = useState(null); // 'contradictions', 'gaps', or null for all
+  const [activeFilter, setActiveFilter] = useState('tables'); // 'tables', 'contradictions', 'gaps', or null for all
 
   const handleDetectContradictions = async () => {
     console.log('🔍 Detect Contradictions button clicked');
@@ -46,6 +46,7 @@ function App() {
         console.log('✅ Contradictions found:', data.contradictions.length);
         setContradictions(data.contradictions);
         setContradictionsAnalyzed(true);
+        setActiveFilter('contradictions'); // Auto-switch to contradictions view
       } else {
         console.error('❌ Analysis failed:', data.error);
         alert('Failed to detect contradictions: ' + data.error);
@@ -73,6 +74,7 @@ function App() {
       if (data.success) {
         setGaps(data.gaps);
         setGapsAnalyzed(true);
+        setActiveFilter('gaps'); // Auto-switch to gaps view
       } else {
         alert('Failed to find gaps: ' + data.error);
       }
@@ -398,81 +400,96 @@ function App() {
           <TableDisplay extractedData={extractedData} showTables={false} />
         )}
 
-        {/* Analysis Buttons */}
+        {/* Filter Buttons */}
         {extractedData && !extracting && (
-                            <div className="mt-8 flex gap-4 justify-center">
-                              <button
-                                onClick={() => {
-                                  if (contradictionsAnalyzed) {
-                                    // Toggle filter
-                                    setActiveFilter(activeFilter === 'contradictions' ? null : 'contradictions');
-                                  } else {
-                                    // Run analysis
-                                    handleDetectContradictions();
-                                  }
-                                }}
-                                disabled={analyzingContradictions}
-                                className={`px-6 py-3 rounded-lg flex items-center gap-2 transition-all ${
-                                  contradictionsAnalyzed
-                                    ? activeFilter === 'contradictions'
-                                      ? 'bg-red-600 text-white ring-4 ring-red-300'
-                                      : 'bg-red-500 text-white hover:bg-red-600'
-                                    : analyzingContradictions
-                                      ? 'bg-gray-400 text-white cursor-not-allowed'
-                                      : 'bg-red-500 text-white hover:bg-red-600'
-                                }`}
-                              >
-                                {analyzingContradictions ? (
-                                  <><Loader2 className="w-5 h-5 animate-spin" /> Analyzing...</>
-                                ) : contradictionsAnalyzed ? (
-                                  <>✓ Contradictions Analyzed {contradictions.length > 0 && `(${contradictions.length})`}</>
-                                ) : (
-                                  <>Detect Contradictions</>
-                                )}
-                              </button>
+          <div className="mt-8 flex gap-4 justify-center flex-wrap">
+            {/* Tables Button */}
+            <button
+              onClick={() => setActiveFilter('tables')}
+              className={`px-8 py-4 rounded-2xl flex items-center gap-2 transition-all font-bold text-lg shadow-lg ${
+                activeFilter === 'tables'
+                  ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white ring-4 ring-blue-300 scale-105'
+                  : 'bg-white text-blue-600 border-2 border-blue-300 hover:border-blue-500 hover:shadow-xl'
+              }`}
+            >
+              <Table className="w-5 h-5" />
+              Tables
+            </button>
 
-                              <button
-                                onClick={() => {
-                                  if (gapsAnalyzed) {
-                                    // Toggle filter
-                                    setActiveFilter(activeFilter === 'gaps' ? null : 'gaps');
-                                  } else {
-                                    // Run analysis
-                                    handleFindGaps();
-                                  }
-                                }}
-                                disabled={analyzingGaps}
-                                className={`px-6 py-3 rounded-lg flex items-center gap-2 transition-all ${
-                                  gapsAnalyzed
-                                    ? activeFilter === 'gaps'
-                                      ? 'bg-yellow-600 text-white ring-4 ring-yellow-300'
-                                      : 'bg-yellow-500 text-white hover:bg-yellow-600'
-                                    : analyzingGaps
-                                      ? 'bg-gray-400 text-white cursor-not-allowed'
-                                      : 'bg-yellow-500 text-white hover:bg-yellow-600'
-                                }`}
-                              >
-                                {analyzingGaps ? (
-                                  <><Loader2 className="w-5 h-5 animate-spin" /> Analyzing...</>
-                                ) : gapsAnalyzed ? (
-                                  <>✓ Gaps Analyzed {gaps.length > 0 && `(${gaps.length})`}</>
-                                ) : (
-                                  <>Find Gaps</>
-                                )}
-                              </button>
-                            </div>                )}
+            {/* Contradictions Button */}
+            <button
+              onClick={() => {
+                if (contradictionsAnalyzed) {
+                  setActiveFilter('contradictions');
+                } else {
+                  handleDetectContradictions();
+                }
+              }}
+              disabled={analyzingContradictions}
+              className={`px-8 py-4 rounded-2xl flex items-center gap-2 transition-all font-bold text-lg shadow-lg ${
+                contradictionsAnalyzed
+                  ? activeFilter === 'contradictions'
+                    ? 'bg-gradient-to-r from-red-600 to-rose-600 text-white ring-4 ring-red-300 scale-105'
+                    : 'bg-red-500 text-white hover:bg-red-600 hover:shadow-xl'
+                  : analyzingContradictions
+                    ? 'bg-gray-400 text-white cursor-not-allowed'
+                    : 'bg-red-500 text-white hover:bg-red-600 hover:shadow-xl'
+              }`}
+            >
+              {analyzingContradictions ? (
+                <><Loader2 className="w-5 h-5 animate-spin" /> Analyzing...</>
+              ) : contradictionsAnalyzed ? (
+                <>✓ Contradictions Analyzed {contradictions.length > 0 && `(${contradictions.length})`}</>
+              ) : (
+                <>Find Contradictions</>
+              )}
+            </button>
+
+            {/* Gaps Button */}
+            <button
+              onClick={() => {
+                if (gapsAnalyzed) {
+                  setActiveFilter('gaps');
+                } else {
+                  handleFindGaps();
+                }
+              }}
+              disabled={analyzingGaps}
+              className={`px-8 py-4 rounded-2xl flex items-center gap-2 transition-all font-bold text-lg shadow-lg ${
+                gapsAnalyzed
+                  ? activeFilter === 'gaps'
+                    ? 'bg-gradient-to-r from-yellow-600 to-amber-600 text-white ring-4 ring-yellow-300 scale-105'
+                    : 'bg-yellow-500 text-white hover:bg-yellow-600 hover:shadow-xl'
+                  : analyzingGaps
+                    ? 'bg-gray-400 text-white cursor-not-allowed'
+                    : 'bg-yellow-500 text-white hover:bg-yellow-600 hover:shadow-xl'
+              }`}
+            >
+              {analyzingGaps ? (
+                <><Loader2 className="w-5 h-5 animate-spin" /> Analyzing...</>
+              ) : gapsAnalyzed ? (
+                <>✓ Gaps Analyzed {gaps.length > 0 && `(${gaps.length})`}</>
+              ) : (
+                <>Find Gaps</>
+              )}
+            </button>
+          </div>
+        )}
 
         {/* Display Tables */}
-        {extractedData && !extracting && (
+        {extractedData && !extracting && activeFilter === 'tables' && (
           <TableDisplay extractedData={extractedData} showSummary={false} />
         )}
 
-                <AnalysisDashboard
-                  contradictions={contradictions}
-                  gaps={gaps}
-                  extractedData={extractedData}
-                  activeFilter={activeFilter}
-                />
+        {/* Display Analysis Results */}
+        {extractedData && !extracting && (activeFilter === 'contradictions' || activeFilter === 'gaps') && (
+          <AnalysisDashboard
+            contradictions={contradictions}
+            gaps={gaps}
+            extractedData={extractedData}
+            activeFilter={activeFilter}
+          />
+        )}
           
         
       </div>

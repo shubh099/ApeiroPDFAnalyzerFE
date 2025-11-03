@@ -1,6 +1,6 @@
 import { Table, FileText, Folder, Package, Database } from 'lucide-react';
 
-function TableDisplay({ extractedData }) {
+function TableDisplay({ extractedData, showSummary = true, showTables = true }) {
   if (!extractedData || !extractedData.tables || extractedData.tables.length === 0) {
     return (
       <div className="mt-12 bg-white rounded-3xl shadow-xl border-2 border-gray-200 p-12 text-center">
@@ -29,7 +29,7 @@ function TableDisplay({ extractedData }) {
   return (
     <div className="mt-12 space-y-8">
       {/* Summary Statistics */}
-      {extractedData.summary && (
+      {showSummary && extractedData.summary && (
         <div className="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 rounded-3xl shadow-xl border-2 border-indigo-200 p-8">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-12 h-12 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center">
@@ -93,8 +93,20 @@ function TableDisplay({ extractedData }) {
       )}
 
       {/* Tables Grouped by Fund */}
-      <div className="space-y-10">
-        {Object.keys(groupedByFund).map((fund, fundIndex) => (
+      {showTables && (
+        <>
+          {/* Tables Section Heading */}
+          <div className="bg-gradient-to-br from-blue-50 via-cyan-50 to-teal-50 rounded-3xl shadow-xl border-2 border-blue-200 p-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-cyan-600 rounded-2xl flex items-center justify-center">
+                <Table className="w-6 h-6 text-white" />
+              </div>
+              <h2 className="text-3xl font-black text-gray-900">Tables</h2>
+            </div>
+          </div>
+
+          <div className="space-y-10">
+          {Object.keys(groupedByFund).map((fund, fundIndex) => (
           <div
             key={fundIndex}
             className="bg-white rounded-3xl shadow-2xl border-2 border-indigo-200 overflow-hidden"
@@ -199,8 +211,9 @@ function TableDisplay({ extractedData }) {
             </div>
           </div>
         ))}
-      </div>
-
+          </div>
+        </>
+      )}
 
     </div>
   );

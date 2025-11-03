@@ -184,7 +184,7 @@ function App() {
             <FileCheck2 className="w-14 h-14 text-white" />
           </div>
           <h1 className="text-6xl font-black bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-6 tracking-tight">
-            PDF Intelligence Analysis
+            Health Policy AI
           </h1>
           <p className="text-2xl text-gray-700 max-w-3xl mx-auto leading-relaxed font-medium">
             AI-powered document analysis to extract tables and detect contradictions & gaps

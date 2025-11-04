@@ -277,12 +277,12 @@ function App() {
                   </label>
                 </div>
               ) : (
-                <div className="bg-gradient-to-br from-white to-gray-50 rounded-xl sm:rounded-2xl border-2 border-purple-200 p-4 sm:p-6 lg:p-8 flex flex-col sm:flex-row items-center gap-4 sm:gap-6 shadow-xl">
+                <div className="bg-gradient-to-br from-white to-gray-50 rounded-xl sm:rounded-2xl border-2 border-purple-200 p-4 sm:p-6 lg:p-8 flex flex-col sm:flex-row items-center gap-4 sm:gap-6 shadow-xl max-w-full">
                   <div className="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0">
                     <FileText className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-white" />
                   </div>
-                  <div className="text-center sm:text-left flex-1 min-w-0">
-                    <p className="text-base sm:text-lg lg:text-xl font-bold text-gray-900 truncate max-w-full mb-1">
+                  <div className="text-center sm:text-left flex-1 min-w-0 max-w-full overflow-hidden">
+                    <p className="text-base sm:text-lg lg:text-xl font-bold text-gray-900 truncate w-full mb-1" title={selectedFile.name}>
                       {selectedFile.name}
                     </p>
                     <p className="text-sm sm:text-base text-gray-600 font-semibold">
